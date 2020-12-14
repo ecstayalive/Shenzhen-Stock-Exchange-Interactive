@@ -43,6 +43,8 @@ class Grab:
         Answers = 0  # 回答次数
         QWords = 0  # 提问字数
         AWords = 0  # 回答字数
+        question_str = ''
+        answers_str = ''
         # 保存文件
         # file = open("./temp_data/" + self.company + ".txt", "w")
         for pagenum in range(1, totalpage + 1):
@@ -52,9 +54,21 @@ class Grab:
             Answers += answers
             QWords += qwords
             AWords += awords
+            # 获取文本
+            for i in range(len(contents)):
+                question_str += contents[i]["mainContent"]
+                if "attachedContent" in contents[i]:
+                    answers_str += contents[i]["attachedContent"]
+
             # 保存文件
             # file.write(str(contents))
             # file.write("\n")
+        # 打印问题和回答
+        print('*' * 10 + "提问的文本" + "*"*10)
+        print(question_str)
+        print('*' * 10 + "回答的文本" + "*"*10)
+        print(answers_str)
+        print('*' * 20)
         # file.close()
         print("收集信息完毕")
         print("对于公司" + self.company + "来说，在" + self.startdate + "到" + self.enddate + "之间其总共有", totalrecord, "条提问")
@@ -141,7 +155,7 @@ class Grab:
             temp_content = contents[i]["mainContent"]
             # print(temp_content)
             # 去掉所有的符号
-            parttern = re.compile('\%|\d|\.|\-')  # | 表示或者的意思
+            parttern = re.compile('\%|\d|\.|\-|\s')  # | 表示或者的意思
             temp_content = re.sub(parttern, ' ', temp_content)
             temp_content = re.sub(' +', ' ', temp_content)
             # print(temp_content)
@@ -157,19 +171,22 @@ class Grab:
 
 
 if __name__ == "__main__":
-    print(">" * 20)
     print("Write for QingQing.")
-    print("Warning: 统计字数逻辑与word不同，是因为数字和符号处理方式不同")
-    print("-" * 20)
     while True:
+        print(">" * 20)
+        print("Warning: 统计字数逻辑与word不同，是因为数字和符号处理方式不同")
+        print("如果你想要获得word中统计的字数，请复制输出的文本到word中获取字数")
+        print(">" * 20)
         try:
             company = input("输入公司代码（格式：000001）：")
             startdate = input("输入开始时间（格式 2019-07-01）：")
             enddate = input("输入开始时间（格式 2019-09-30）：")
             grab = Grab(company, startdate, enddate)
+            # grab = Grab("002622", "2016-10-01", "2016-12-31")
             grab.run()
+            # break
         except Exception:
             print("出现错误,可能是网络问题，请重新输入试试")
+            print("<" * 20)
         finally:
             print("<" * 20)
-            print(" "*20)
