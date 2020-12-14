@@ -45,7 +45,7 @@ class Grab:
         AWords = 0  # 回答字数
         # 保存文件
         # file = open("./temp_data/" + self.company + ".txt", "w")
-        for pagenum in range(1, totalpage+1):
+        for pagenum in range(1, totalpage + 1):
             contents = self.information(url_part1, url_part2, pagenum)
             # 获取细节信息
             answers, qwords, awords = self.get_details(contents)
@@ -141,7 +141,7 @@ class Grab:
             temp_content = contents[i]["mainContent"]
             # print(temp_content)
             # 去掉所有的符号
-            parttern = re.compile('\%|\d|\.|\,|\-')  # | 表示或者的意思
+            parttern = re.compile('\%|\d|\.|\-')  # | 表示或者的意思
             temp_content = re.sub(parttern, ' ', temp_content)
             temp_content = re.sub(' +', ' ', temp_content)
             # print(temp_content)
@@ -155,6 +155,21 @@ class Grab:
 
         return answers, qwords, awords
 
+
 if __name__ == "__main__":
-    grab = Grab("002946", "2019-07-01", "2019-09-30")
-    grab.run()
+    print(">" * 20)
+    print("Write for QingQing.")
+    print("Warning: 统计字数逻辑与word不同，是因为数字和符号处理方式不同")
+    print("-" * 20)
+    while True:
+        try:
+            company = input("输入公司代码（格式：000001）：")
+            startdate = input("输入开始时间（格式 2019-07-01）：")
+            enddate = input("输入开始时间（格式 2019-09-30）：")
+            grab = Grab(company, startdate, enddate)
+            grab.run()
+        except Exception:
+            print("出现错误,可能是网络问题，请重新输入试试")
+        finally:
+            print("<" * 20)
+            print(" "*20)
